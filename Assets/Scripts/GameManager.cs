@@ -11,9 +11,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Figure crossPrefab;
     [SerializeField] private Figure dotPrefab;
     [SerializeField] private Vector3 spawnOffset;
+    [SerializeField] private MenuManager menuManager;
     private int currentTurn;
-    private bool canSpawnNextFigure = true;
+    private bool canSpawnFigure = true;
     private bool isGameOver = false;
+    private Cell previousCell;
     
     void Awake()
     {
@@ -28,17 +30,17 @@ public class GameManager : MonoBehaviour
         return currentTurn % 2 == 0 ? dotPrefab : crossPrefab;
     }
 
-    public Figure SpawnNextFigure(Cell aboveCell) {
-        if (!canSpawnNextFigure || isGameOver) return null;
-        canSpawnNextFigure = false;
+    public Figure SpawnFigure(Cell aboveCell) {
+        if (!canSpawnFigure || isGameOver) return null;
+        canSpawnFigure = false;
 
         currentTurn++;
 
         Figure nextFigurePrefab = GetNextFigurePrefab();
         Vector3 spawnPosition = aboveCell.transform.position + spawnOffset;
 
-        Figure nextFigure = Instantiate(nextFigurePrefab, spawnPosition, nextFigurePrefab.transform.rotation);
-        return nextFigure;
+        Figure currentFigure = Instantiate(nextFigurePrefab, spawnPosition, nextFigurePrefab.transform.rotation);
+        return currentFigure;
     }
 
     /* For a given cell index, return a list of rows/columns/diagonals (if applicable)
@@ -70,6 +72,11 @@ public class GameManager : MonoBehaviour
     }
 
     public void CheckWinner(Cell currentCell) {
+        // Avoid of double-checking collisions from same cell
+        if (currentCell == previousCell) return;
+        previousCell = currentCell;
+        menuManager.SwapFigure();
+
         int cellIndex = cells.IndexOf(currentCell);
         List<List<int>> lines = GetLinesWithCell(cellIndex);
         string figureName = currentCell.Figure.name;
@@ -88,12 +95,15 @@ public class GameManager : MonoBehaviour
                 isGameOver = true;
                 DrawWinner(line);
             } else {
-                canSpawnNextFigure = true;
+                canSpawnFigure = true;
             }
         }
     }
 
     private void DrawWinner(List<int> line) {
+        menuManager.SwapFigure();
+        menuManager.ShowWinner();
+
         foreach(int index in line) {
             cells[index].Figure.applyWinnerMaterial();
         }

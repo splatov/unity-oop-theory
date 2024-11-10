@@ -10,7 +10,7 @@ public class Cell : MonoBehaviour
     {
         if (Figure != null) return;
 
-        Figure maybeFigure = GameManager.Instance.SpawnNextFigure(this);
+        Figure maybeFigure = GameManager.Instance.SpawnFigure(this);
         if (maybeFigure != null) {
             Figure = maybeFigure;
         }

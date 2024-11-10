@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    [SerializeField] private Text currentMoveText;
+    [SerializeField] private Text winnerText;
+    [SerializeField] private Figure crossFigure;
+    [SerializeField] private Figure dotFigure;
+
+    public void SwapFigure() {
+        bool showDot = crossFigure.gameObject.activeSelf;
+        crossFigure.gameObject.SetActive(!showDot);
+        dotFigure.gameObject.SetActive(showDot);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void ShowWinner() {
+        currentMoveText.gameObject.SetActive(false);
+        winnerText.gameObject.SetActive(true);
     }
 }
