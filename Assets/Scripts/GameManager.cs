@@ -9,22 +9,23 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance {get; private set;}
     [SerializeField] private List<Cell> cells;
     [SerializeField] private List<Figure> prefabs;
-    [SerializeField] private Vector3 spawnOffset;
     [SerializeField] private UIManager uiManager;
+    private Vector3 spawnOffset = new Vector3(0, 2, 0);
+    private float tiltAngle = 10;
     private int currentTurn;
     private bool canSpawnFigure = true;
     private bool isGameOver = false;
-    private Cell previousCell;
     
     void Awake()
     {
-        if (Instance == null) {
-            Instance = this;
-            QualitySettings.vSyncCount = 0;
-            Application.targetFrameRate = 30;
-        } else {
+        if (Instance != null) {
             Destroy(gameObject);
+            return;
         }
+
+        Instance = this;
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 30;
     }
 
     public Figure SpawnFigure(Cell aboveCell) {
@@ -37,6 +38,8 @@ public class GameManager : MonoBehaviour
         Vector3 spawnPosition = aboveCell.transform.position + spawnOffset;
 
         Figure currentFigure = Instantiate(nextFigurePrefab, spawnPosition, nextFigurePrefab.transform.rotation);
+        TiltFigure(currentFigure);
+
         return currentFigure;
     }
 
@@ -44,11 +47,19 @@ public class GameManager : MonoBehaviour
         return prefabs[currentTurn % 2];
     }
 
-    public void CheckWinner(Cell currentCell) {
-        // Avoid of double-checking collisions from same cell
-        if (previousCell == currentCell) return;
-        previousCell = currentCell;
+    private void TiltFigure(Figure figure) {
+        Vector2 axis2d;
+        
+        while(true) {
+            axis2d = Random.insideUnitCircle;
+            if (axis2d.magnitude > Mathf.Epsilon) break;
+        }
 
+        Vector3 tiltAxis = new Vector3(axis2d.x, 0, axis2d.y);
+        figure.transform.Rotate(tiltAxis, tiltAngle);
+    }
+
+    public void CheckWinner(Cell currentCell) {
         int cellIndex = cells.IndexOf(currentCell);
         List<List<int>> lines = GetLinesWithCell(cellIndex);
         string figureName = currentCell.Figure.name;

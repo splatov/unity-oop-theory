@@ -5,6 +5,7 @@ using UnityEngine;
 public class Cell : MonoBehaviour
 {
     public Figure Figure {get; private set;}
+    private bool isCollisionTriggered;
 
     void OnMouseDown()
     {
@@ -18,6 +19,9 @@ public class Cell : MonoBehaviour
 
     void OnCollisionEnter(Collision collisionInfo)
     {
-        GameManager.Instance.CheckWinner(this);
+        if (!isCollisionTriggered) {
+            GameManager.Instance.CheckWinner(this);
+            isCollisionTriggered = true;
+        }
     }
 }
