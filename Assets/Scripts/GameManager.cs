@@ -25,10 +25,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private Figure GetNextFigurePrefab() {
-        return prefabs[currentTurn % 2];
-    }
-
     public Figure SpawnFigure(Cell aboveCell) {
         if (!canSpawnFigure || isGameOver) return null;
         canSpawnFigure = false;
@@ -40,6 +36,30 @@ public class GameManager : MonoBehaviour
 
         Figure currentFigure = Instantiate(nextFigurePrefab, spawnPosition, nextFigurePrefab.transform.rotation);
         return currentFigure;
+    }
+
+    private Figure GetNextFigurePrefab() {
+        return prefabs[currentTurn % 2];
+    }
+
+    public void CheckWinner(Cell currentCell) {
+        // Avoid of double-checking collisions from same cell
+        if (currentCell == previousCell) return;
+        previousCell = currentCell;
+
+        int cellIndex = cells.IndexOf(currentCell);
+        List<List<int>> lines = GetLinesWithCell(cellIndex);
+        string figureName = currentCell.Figure.name;
+
+        foreach(List<int> line in lines) {
+            if (IsWinnerLine(line, figureName)) {
+                isGameOver = true;
+                DrawWinner(line);
+                return;
+            }
+        }
+
+        PrepareNextMove();
     }
 
     /* For a given cell index, return a list of rows/columns/diagonals (if applicable)
@@ -73,32 +93,17 @@ public class GameManager : MonoBehaviour
         return lines;
     }
 
-    public void CheckWinner(Cell currentCell) {
-        // Avoid of double-checking collisions from same cell
-        if (currentCell == previousCell) return;
-        previousCell = currentCell;
-
-        int cellIndex = cells.IndexOf(currentCell);
-        List<List<int>> lines = GetLinesWithCell(cellIndex);
-        string figureName = currentCell.Figure.name;
-
-        foreach(List<int> line in lines) {
-            bool isWin = true;
-
-            foreach(int index in line) {
-                if (cells[index].Figure == null || cells[index].Figure.name != figureName) {
-                    isWin = false;
-                    break;
-                }
-            }
-
-            if (isWin) {
-                isGameOver = true;
-                DrawWinner(line);
-                return;
+    private bool IsWinnerLine(List<int> line, string figureName) {
+        foreach(int index in line) {
+            if (cells[index].Figure == null || cells[index].Figure.name != figureName) {
+                return false;
             }
         }
 
+        return true;
+    }
+
+    private void PrepareNextMove() {
         if (currentTurn == 9) {
             isGameOver = true;
             uiManager.ShowDraw();
