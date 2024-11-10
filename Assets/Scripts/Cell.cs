@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
-    public Figure Figure {get; private set;}
+    public Figure Figure { get; private set; }
     private bool isCollisionTriggered;
 
     void OnMouseDown()
@@ -12,14 +12,16 @@ public class Cell : MonoBehaviour
         if (Figure != null) return;
 
         Figure maybeFigure = GameManager.Instance.SpawnFigure(this);
-        if (maybeFigure != null) {
+        if (maybeFigure != null)
+        {
             Figure = maybeFigure;
         }
     }
 
     void OnCollisionEnter(Collision collisionInfo)
     {
-        if (!isCollisionTriggered) {
+        if (!isCollisionTriggered)
+        {
             GameManager.Instance.CheckWinner(this);
             isCollisionTriggered = true;
         }

@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance {get; private set;}
+    public static GameManager Instance { get; private set; }
     [SerializeField] private List<Cell> cells;
     [SerializeField] private List<Figure> prefabs;
     [SerializeField] private UIManager uiManager;
@@ -15,10 +15,11 @@ public class GameManager : MonoBehaviour
     private int currentTurn;
     private bool canSpawnFigure = true;
     private bool isGameOver = false;
-    
+
     void Awake()
     {
-        if (Instance != null) {
+        if (Instance != null)
+        {
             Destroy(gameObject);
             return;
         }
@@ -28,7 +29,8 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 30;
     }
 
-    public Figure SpawnFigure(Cell aboveCell) {
+    public Figure SpawnFigure(Cell aboveCell)
+    {
         if (!canSpawnFigure || isGameOver) return null;
         canSpawnFigure = false;
 
@@ -43,14 +45,17 @@ public class GameManager : MonoBehaviour
         return currentFigure;
     }
 
-    private Figure GetNextFigurePrefab() {
+    private Figure GetNextFigurePrefab()
+    {
         return prefabs[currentTurn % 2];
     }
 
-    private void TiltFigure(Figure figure) {
+    private void TiltFigure(Figure figure)
+    {
         Vector2 axis2d;
-        
-        while(true) {
+
+        while (true)
+        {
             axis2d = Random.insideUnitCircle;
             if (axis2d.magnitude > Mathf.Epsilon) break;
         }
@@ -59,13 +64,16 @@ public class GameManager : MonoBehaviour
         figure.transform.Rotate(tiltAxis, tiltAngle);
     }
 
-    public void CheckWinner(Cell currentCell) {
+    public void CheckWinner(Cell currentCell)
+    {
         int cellIndex = cells.IndexOf(currentCell);
         List<List<int>> lines = GetLinesWithCell(cellIndex);
         string figureName = currentCell.Figure.name;
 
-        foreach(List<int> line in lines) {
-            if (IsWinnerLine(line, figureName)) {
+        foreach (List<int> line in lines)
+        {
+            if (IsWinnerLine(line, figureName))
+            {
                 isGameOver = true;
                 DrawWinner(line);
                 return;
@@ -78,15 +86,17 @@ public class GameManager : MonoBehaviour
     /* For a given cell index, return a list of rows/columns/diagonals (if applicable)
        that contain this cell;
     */
-    private List<List<int>> GetLinesWithCell(int cellIndex) {
+    private List<List<int>> GetLinesWithCell(int cellIndex)
+    {
         int rowIndex = cellIndex / 3;
         int columnIndex = cellIndex % 3;
-        
+
         List<List<int>> lines = new List<List<int>>();
         List<int> row = new List<int>();
         List<int> column = new List<int>();
 
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++)
+        {
             row.Add(rowIndex * 3 + i);
             column.Add(i * 3 + columnIndex);
         }
@@ -95,20 +105,25 @@ public class GameManager : MonoBehaviour
         lines.Add(column);
 
         // Append diagonals, if applicable
-        if (cellIndex % 4 == 0) {
-            lines.Add(new List<int>(){0, 4, 8});
+        if (cellIndex % 4 == 0)
+        {
+            lines.Add(new List<int>() { 0, 4, 8 });
         }
 
-        if (cellIndex == 2 || cellIndex == 4 || cellIndex == 6) {
-            lines.Add(new List<int>(){2, 4, 6});
+        if (cellIndex == 2 || cellIndex == 4 || cellIndex == 6)
+        {
+            lines.Add(new List<int>() { 2, 4, 6 });
         }
-        
+
         return lines;
     }
 
-    private bool IsWinnerLine(List<int> line, string figureName) {
-        foreach(int index in line) {
-            if (cells[index].Figure == null || cells[index].Figure.name != figureName) {
+    private bool IsWinnerLine(List<int> line, string figureName)
+    {
+        foreach (int index in line)
+        {
+            if (cells[index].Figure == null || cells[index].Figure.name != figureName)
+            {
                 return false;
             }
         }
@@ -116,25 +131,32 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    private void PrepareNextMove() {
-        if (currentTurn == 9) {
+    private void PrepareNextMove()
+    {
+        if (currentTurn == 9)
+        {
             isGameOver = true;
             uiManager.ShowDraw();
-        } else {
+        }
+        else
+        {
             canSpawnFigure = true;
             uiManager.SwapFigure();
         }
     }
 
-    private void DrawWinner(List<int> line) {
+    private void DrawWinner(List<int> line)
+    {
         uiManager.ShowWinner();
 
-        foreach(int index in line) {
+        foreach (int index in line)
+        {
             cells[index].Figure.applyWinnerMaterial();
         }
     }
 
-    public void RestartGame() {
+    public void RestartGame()
+    {
         SceneManager.LoadScene(0);
     }
 }
