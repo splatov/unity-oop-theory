@@ -45,11 +45,13 @@ public class GameManager : MonoBehaviour
         return currentFigure;
     }
 
+    // ABSTRACTION
     private Figure GetNextFigurePrefab()
     {
         return prefabs[currentTurn % 2];
     }
 
+    // ABSTRACTION
     private void TiltFigure(Figure figure)
     {
         Vector2 axis2d;
@@ -86,6 +88,7 @@ public class GameManager : MonoBehaviour
     /* For a given cell index, return a list of rows/columns/diagonals (if applicable)
        that contain this cell;
     */
+    // ABSTRACTION
     private List<List<int>> GetLinesWithCell(int cellIndex)
     {
         int rowIndex = cellIndex / 3;
@@ -118,6 +121,7 @@ public class GameManager : MonoBehaviour
         return lines;
     }
 
+    // ABSTRACTION
     private bool IsWinnerLine(List<int> line, string figureName)
     {
         foreach (int index in line)
@@ -131,6 +135,7 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
+    // ABSTRACTION
     private void PrepareNextMove()
     {
         if (currentTurn == 9)
@@ -145,6 +150,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // ABSTRACTION
     private void DrawWinner(List<int> line)
     {
         uiManager.ShowWinner();

@@ -1,7 +1,9 @@
 using UnityEngine;
 
+// INHERITANCE
 public class Cross : Figure
 {
+    // POLYMORPHISM
     public override void applyWinnerMaterial()
     {
         Renderer[] renderers = transform.GetComponentsInChildren<Renderer>();
