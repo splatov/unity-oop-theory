@@ -11,18 +11,21 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Figure crossFigure;
     [SerializeField] private Figure dotFigure;
 
-    public void SwapFigure() {
+    public void SwapFigure()
+    {
         bool showDot = crossFigure.gameObject.activeSelf;
         crossFigure.gameObject.SetActive(!showDot);
         dotFigure.gameObject.SetActive(showDot);
     }
 
-    public void ShowWinner() {
+    public void ShowWinner()
+    {
         currentMoveText.gameObject.SetActive(false);
         winnerText.gameObject.SetActive(true);
     }
 
-    public void ShowDraw() {
+    public void ShowDraw()
+    {
         currentMoveText.gameObject.SetActive(false);
         crossFigure.gameObject.SetActive(false);
         dotFigure.gameObject.SetActive(false);
