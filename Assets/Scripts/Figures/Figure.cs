@@ -7,9 +7,4 @@ public abstract class Figure : MonoBehaviour
     [field: SerializeField] public Material winnerMaterial {get; private set;}
     
     public abstract void applyWinnerMaterial();
-
-    void OnMouseDown()
-    {
-        applyWinnerMaterial();
-    }
 }
