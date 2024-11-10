@@ -94,9 +94,15 @@ public class GameManager : MonoBehaviour
             if (isWin) {
                 isGameOver = true;
                 DrawWinner(line);
-            } else {
-                canSpawnFigure = true;
+                return;
             }
+        }
+
+        if (currentTurn == 9) {
+            isGameOver = true;
+            menuManager.ShowDraw();
+        } else {
+            canSpawnFigure = true;
         }
     }
 

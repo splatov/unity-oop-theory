@@ -7,6 +7,7 @@ public class MenuManager : MonoBehaviour
 {
     [SerializeField] private Text currentMoveText;
     [SerializeField] private Text winnerText;
+    [SerializeField] private Text drawText;
     [SerializeField] private Figure crossFigure;
     [SerializeField] private Figure dotFigure;
 
@@ -19,5 +20,12 @@ public class MenuManager : MonoBehaviour
     public void ShowWinner() {
         currentMoveText.gameObject.SetActive(false);
         winnerText.gameObject.SetActive(true);
+    }
+
+    public void ShowDraw() {
+        currentMoveText.gameObject.SetActive(false);
+        crossFigure.gameObject.SetActive(false);
+        dotFigure.gameObject.SetActive(false);
+        drawText.gameObject.SetActive(true);
     }
 }
