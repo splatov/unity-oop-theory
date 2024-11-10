@@ -1924,7 +1924,6 @@ MonoBehaviour:
   prefabs:
   - {fileID: -7353913328306397349, guid: 66c8b87c76f95fe45bca8469e455b834, type: 3}
   - {fileID: -9035263348625991263, guid: 205688e0df2f328478a32c9789cf126b, type: 3}
-  spawnOffset: {x: 0, y: 2, z: 0}
   uiManager: {fileID: 1083601785}
 --- !u!1001 &1800473001
 PrefabInstance:
