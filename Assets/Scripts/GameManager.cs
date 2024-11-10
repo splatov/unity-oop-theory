@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
     {
         if (Instance == null) {
             Instance = this;
+            QualitySettings.vSyncCount = 0;
+            Application.targetFrameRate = 30;
         } else {
             Destroy(gameObject);
         }
@@ -44,7 +46,7 @@ public class GameManager : MonoBehaviour
 
     public void CheckWinner(Cell currentCell) {
         // Avoid of double-checking collisions from same cell
-        if (currentCell == previousCell) return;
+        if (previousCell == currentCell) return;
         previousCell = currentCell;
 
         int cellIndex = cells.IndexOf(currentCell);
