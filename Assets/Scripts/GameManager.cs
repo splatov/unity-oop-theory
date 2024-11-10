@@ -8,10 +8,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance {get; private set;}
     [SerializeField] private List<Cell> cells;
-    [SerializeField] private Figure crossPrefab;
-    [SerializeField] private Figure dotPrefab;
+    [SerializeField] private List<Figure> prefabs;
     [SerializeField] private Vector3 spawnOffset;
-    [SerializeField] private MenuManager menuManager;
+    [SerializeField] private UIManager uiManager;
     private int currentTurn;
     private bool canSpawnFigure = true;
     private bool isGameOver = false;
@@ -27,7 +26,7 @@ public class GameManager : MonoBehaviour
     }
 
     private Figure GetNextFigurePrefab() {
-        return currentTurn % 2 == 0 ? dotPrefab : crossPrefab;
+        return prefabs[currentTurn % 2];
     }
 
     public Figure SpawnFigure(Cell aboveCell) {
@@ -63,8 +62,11 @@ public class GameManager : MonoBehaviour
         lines.Add(column);
 
         // Append diagonals, if applicable
-        if (cellIndex % 2 == 0) {
+        if (cellIndex % 4 == 0) {
             lines.Add(new List<int>(){0, 4, 8});
+        }
+
+        if (cellIndex == 2 || cellIndex == 4 || cellIndex == 6) {
             lines.Add(new List<int>(){2, 4, 6});
         }
         
@@ -75,7 +77,6 @@ public class GameManager : MonoBehaviour
         // Avoid of double-checking collisions from same cell
         if (currentCell == previousCell) return;
         previousCell = currentCell;
-        menuManager.SwapFigure();
 
         int cellIndex = cells.IndexOf(currentCell);
         List<List<int>> lines = GetLinesWithCell(cellIndex);
@@ -100,15 +101,15 @@ public class GameManager : MonoBehaviour
 
         if (currentTurn == 9) {
             isGameOver = true;
-            menuManager.ShowDraw();
+            uiManager.ShowDraw();
         } else {
             canSpawnFigure = true;
+            uiManager.SwapFigure();
         }
     }
 
     private void DrawWinner(List<int> line) {
-        menuManager.SwapFigure();
-        menuManager.ShowWinner();
+        uiManager.ShowWinner();
 
         foreach(int index in line) {
             cells[index].Figure.applyWinnerMaterial();

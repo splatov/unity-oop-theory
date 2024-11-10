@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MenuManager : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
     [SerializeField] private Text currentMoveText;
     [SerializeField] private Text winnerText;
